@@ -1,0 +1,35 @@
+---
+- name: Install EPEL repository
+  yum:
+    name: http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: latest
+
+- name: download certbot
+  yum:
+    name: certbot
+    state: latest
+
+- name: stop nginx
+  service:
+    name: nginx
+    state: stopped
+    enabled: yes
+
+- name: Check if certificate already exist
+  stat:
+    path: /etc/letsencrypt/live/{{ certbot.domains | first }}/cert.pem
+  register: letsencrypt_cert
+
+- name: Generate new certificate if one doesn't exist.
+  shell: "certbot certonly --debug --standalone --noninteractive --agree-tos --email {{certbot.email}} -d {{ item }}"
+  with_items: "{{ certbot.domains }}"
+  when: letsencrypt_cert.stat.exists == False
+  notify: Restart nginx
+
+- name: Add cron job for renew
+  cron:
+    name: Certbot auto-renew
+    job: 'certbot renew --quiet --no-self-upgrade'
+    minute: "{{ certbot.renew_minute }}"
+    hour: "{{ certbot.renew_hour }}"
+    user: "{{ certbot.user }}"

@@ -1,0 +1,30 @@
+- name: per user group
+  group: 
+    name="{{item.userName}}"
+    gid="{{item.gid | default(item.uid) | default(omit)}}"
+  with_items: "{{user_users}}"
+  when: "'group' not in item and create_per_user_group"
+  tags: ['users']
+
+- name: user creation
+  user:
+    name: "{{item.userName}}"
+    group: "{{item.userName}}"
+    groups: "{{item.groups | join(',') if 'groups' in item else ''}}"
+    append: "{{item.append | default(omit)}}"
+    shell: "/bin/bash"
+    comment: "{{item.name if item.name is defined else ''}}"
+    uid: "{{item.uid | default(omit)}}"
+    home: "{{item.home | default('/home/' + item.userName)}}"
+    createhome: "{{'yes' if item.create_home_dir else 'no'}}"
+  with_items: "{{user_users}}"
+  tags: ['users']
+
+- name: add user keys
+  authorized_key:
+    user: "{{item.0.userName}}"
+    key: "{{ lookup('file', item.1) }}"
+  with_subelements:
+    - "{{user_users}}"
+    - keyFilePath
+  tags: ['users']

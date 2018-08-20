@@ -1,0 +1,40 @@
+user_groups:
+  - name: 'develper'
+    gid: 1001
+  - name: 'admin'
+    gid: 1000
+create_per_user_group: true
+user_users:
+  - userName: 'userNameToLogin'
+    uid: 4000
+    name: 'User Name'
+    create_home_dir: yes
+    keyFilePath: 
+      - ~/.ssh/id_rsa.pub
+nginx_sites:
+  - static_website: true
+    name: "website.com"
+    file_dir: "{{playbook_dir}}/files/static/"
+    server_dir: "/var/www/website.com/"
+logrotate_scripts:
+  - name: nginx
+    log_dir: '/var/log/nginx'
+    log_extension: 'log'
+    options:
+      - rotate 7
+      - weekly
+      - size 10M
+      - missingok
+      - compress
+      - delaycompress
+      - copytruncate
+      - create 0644 nginx nginx
+    scripts:
+        postrotate: "[ -s /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`"
+author: "Author"
+s3_sync_to_local_contents:
+  - bucket_name: "letsencryptcerts"
+    destination_path: "/etc/letsencrypt/live/"
+s3_upload_contents:
+  - bucket_name: "letsencryptcerts"
+    source_path: "/etc/letsencrypt/live/"

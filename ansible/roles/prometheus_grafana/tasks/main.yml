@@ -1,0 +1,21 @@
+- name: "Add prometheus as datasource"
+  vars:
+    prometheus_datasource:
+      name: "prometheus"
+      type: "prometheus"
+      url: "http://127.0.0.1:9090"
+      access: "proxy"
+      isDefault: true
+      basicAuth: false
+  uri:
+    url: http://127.0.0.1:3000/api/datasources
+    method: POST
+    body: "{{ prometheus_datasource | to_json }}"
+    body_format: json
+    user: admin
+    password: admin
+    force_basic_auth: yes
+    status_code: 200,409,500  # 409 means, the datasource is already added
+    headers:
+      Content-Type: "application/json"
+      Accept: "application/json"

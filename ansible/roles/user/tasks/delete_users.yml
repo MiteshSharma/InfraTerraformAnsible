@@ -1,0 +1,16 @@
+- name: delete user
+  user:
+    name: "{{item.userName}}"
+    state: absent
+    remove: "{{item.remove | default(omit)}}"
+    force: "{{item.force | default(omit)}}"
+  with_items: "{{user_delete_users}}"
+  tags: ['users']
+
+- name: delete per user group
+  group:
+    name: "{{item.userName}}"
+    state: absent
+  with_items: "{{user_delete_users}}"
+  when: "create_per_user_group"
+  tags: ['users']

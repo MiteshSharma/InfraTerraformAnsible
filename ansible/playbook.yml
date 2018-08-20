@@ -1,0 +1,44 @@
+---
+- hosts: tag_Names_WebServer
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - prometheus_node_exporter
+    - nginx
+    - nginx_site
+    - lets_encrypt
+    - s3_sync
+    - logrotate
+
+- hosts: tag_Names_JenkinsServer
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - prometheus_node_exporter
+    - java8
+    - jenkins
+    - nginx
+    - nginx_site
+    - lets_encrypt
+    - s3_sync
+    - logrotate
+
+- hosts: tag_Names_PrometheusServer
+  remote_user: ec2-user
+  become: yes
+  become_user: root
+  become_method: sudo
+  roles:
+    - prometheus_blackbox_exporter
+    - prometheus
+    - grafana
+    - prometheus_grafana
+    - nginx
+    - nginx_site
+    - lets_encrypt
+    - s3_sync
+    - logrotate

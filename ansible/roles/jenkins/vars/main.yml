@@ -1,0 +1,5 @@
+---
+jenkin:
+  repo_url: "http://pkg.jenkins-ci.org/redhat/jenkins.repo"
+  gpg_key: "https://jenkins-ci.org/redhat/jenkins-ci.org.key"
+  java_options: "-Djava.awt.headless=true -Djenkins.install.runSetupWizard=false"

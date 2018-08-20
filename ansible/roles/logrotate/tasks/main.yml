@@ -1,0 +1,12 @@
+- name: Install logrotate
+  package: 
+    name: logrotate
+    state: present
+  when: logrotate_scripts is defined
+
+- name: Setup logrotate scripts
+  template:
+    src: logrotate.d.j2
+    dest: "{{ logrotate_conf_dir }}{{ item.name }}"
+  with_items: "{{ logrotate_scripts }}"
+  when: logrotate_scripts is defined

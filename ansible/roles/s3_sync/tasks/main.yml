@@ -1,0 +1,11 @@
+- name: Sync directory from S3 to disk
+  command: "aws s3 sync s3://{{ item.bucket_name }} {{ item.destination_path }}"
+  become: yes
+  with_items:
+    - "{{ s3_sync_to_local_contents }}"
+
+- name: Sync directory from desk to s3
+  command: "aws s3 sync {{ item.source_path }} s3://{{ item.bucket_name }}"
+  become: yes
+  with_items:
+    - "{{ s3_upload_contents }}"

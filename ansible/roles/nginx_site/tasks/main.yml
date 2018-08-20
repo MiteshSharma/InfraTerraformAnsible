@@ -1,0 +1,27 @@
+- name: Creates directory
+  file: 
+    path: "{{ item.server_dir }}"
+    state: directory
+  when: "item.static_website"
+  with_items: "{{ nginx_sites }}"
+- name: Copy static files
+  copy:
+    src: "{{ item.file_dir }}"
+    dest: "{{ item.server_dir }}"
+    mode: 0644
+  when: "item.static_website"
+  with_items: "{{ nginx_sites }}"
+- name: Update static nginx config
+  template: 
+    src: static.https.nginx.j2
+    dest: /etc/nginx/conf.d/{{ item.name }}.conf
+  when: "item.static_website"
+  with_items: "{{ nginx_sites }}"
+  notify: Restart Nginx
+- name: Update nginx config
+  template:
+    src: proxy.https.nginx.j2
+    dest: /etc/nginx/conf.d/{{ item.name }}.conf
+  when: "item.static_website == False"
+  with_items: "{{ nginx_sites }}"
+  notify: Restart Nginx

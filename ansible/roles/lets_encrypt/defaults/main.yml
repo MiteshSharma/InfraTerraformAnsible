@@ -1,0 +1,8 @@
+---
+certbot:
+  user: ec2-user
+  email: user.email@gmail.com
+  domains:
+    - "website.com"
+  renew_minute: 00
+  renew_hour: 12

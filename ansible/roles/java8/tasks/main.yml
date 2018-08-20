@@ -1,0 +1,10 @@
+- name: Install java8
+  yum:
+    name: "{{ java.version }}"
+    state: present
+
+- name: Correct the alternatives java
+  alternatives:
+    name: java
+    link: /usr/bin/java
+    path: "{{ java.alternative }}"

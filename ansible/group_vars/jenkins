@@ -1,0 +1,36 @@
+author: "Author"
+nginx_sites:
+  - static_website: false
+    name: "ci.website.com"
+    redirect_path: "http://localhost:8080"
+logrotate_scripts:
+  - name: nginx
+    log_dir: '/var/log/nginx'
+    log_extension: 'log'
+    options:
+      - rotate 7
+      - weekly
+      - size 10M
+      - missingok
+      - compress
+      - delaycompress
+      - copytruncate
+      - create 0644 nginx nginx
+    scripts:
+        postrotate: "[ -s /var/run/nginx.pid ] && kill -USR1 `cat /var/run/nginx.pid`"
+
+s3_sync_to_local_contents:
+  - bucket_name: "letsencryptcerts"
+    destination_path: "/etc/letsencrypt/live/"
+
+certbot:
+  user: ec2-user
+  email: user.email@gmail.com
+  domains:
+    - "ci.website.com"
+  renew_minute: 00
+  renew_hour: 12
+
+s3_upload_contents:
+  - bucket_name: "letsencryptcerts"
+    source_path: "/etc/letsencrypt/live/"
