@@ -45,14 +45,14 @@ module "route53Module" {
  	access_key 	= "${var.access_key}"
 	secret_key 	= "${var.secret_key}"
 	region     	= "${var.region}"
-	domain_name	= "miteshsharma.com"
+	domain_name	= "website.com"
 	aRecords	= [
-		"miteshsharma.com ${module.serverInstanceModule.instance_eip}",
-		"ci.miteshsharma.com ${module.jenkinsInstanceModule.instance_eip}",
-		"prometheus.miteshsharma.com ${module.prometheusInstanceModule.instance_eip}",
-		"grafana.miteshsharma.com ${module.prometheusInstanceModule.instance_eip}"
+		"website.com ${module.serverInstanceModule.instance_eip}",
+		"ci.website.com ${module.jenkinsInstanceModule.instance_eip}",
+		"prometheus.website.com ${module.prometheusInstanceModule.instance_eip}",
+		"grafana.website.com ${module.prometheusInstanceModule.instance_eip}"
 	]
 	cnameRecords	= [
-		"www.miteshsharma.com miteshsharma.com"
+		"www.website.com website.com"
 	]
 }
