@@ -19,3 +19,5 @@ Terraform commands:
 Then run ansible to provision all servers. Provisioning is done using dynamic inventory and ip addresses are identified using tags. group_vars needs to be provided with right configurations.
 
 Ansible command: ansible-playbook -i ec2.py playbook.yml -vvv
+
+Ansible code is tested on amazon linux 2 operating system.
